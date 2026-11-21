@@ -33,15 +33,11 @@ $facilities = $data['facilities'] ?? [];
 
             <div class="hero-v2-visual">
                 <div class="hero-visual-frame">
-                    <img src="<?= base_url('assets/images/Mengikuti Upacara Pembukaan Jambore Cabang.jpg') ?>"
-                         alt="Kegiatan Kepramukaan Santri MTs Al-Huda Gondang"
+                    <img src="<?= base_url('assets/images/fotomts.jpeg') ?>"
+                         alt="fotomts"
                          width="600"
                          height="380"
                          fetchpriority="high">
-                    <div class="hero-visual-caption">
-                        <span>🏛️</span>
-                        <span>Dokumentasi Kegiatan &amp; Kepanduan Santri MTs Al-Huda</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -52,7 +48,7 @@ $facilities = $data['facilities'] ?? [];
         <div class="container speech-grid">
             <div class="speech-photo-wrap">
                 <div class="speech-photo-box">
-                    <img src="<?= base_url('assets/images/Pertemuan Wali Santri.jpg') ?>"
+                    <img src="<?= base_url('assets/images/kepalamadrasah.png') ?>"
                          alt="Kepala Madrasah MTs Al-Huda Gondang"
                          width="220"
                          height="270"
