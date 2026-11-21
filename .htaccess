@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Paksa HTTPS Redirect
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    RewriteRule ^public/ - [L]
+
+    RewriteRule ^(css|js|assets|uploads)/(.*)$ public/$1/$2 [L]
+
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+</IfModule>
