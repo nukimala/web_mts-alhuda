@@ -28,8 +28,6 @@ class AdminController
             'user'  => $user,
             'role'  => Auth::displayRole(),
             'stats' => $this->stats($pdo),
-            'migrasi' => $this->migrationState($pdo),
-            'pengaturan' => $this->settingsPreview($pdo),
             'flash' => $_SESSION['_flash_success'] ?? null,
         ];
 
@@ -70,40 +68,6 @@ class AdminController
             return (int) $pdo->query($sql)->fetchColumn();
         } catch (PDOException $e) {
             return 0;
-        }
-    }
-
-    /**
-     * @return list<array<string,mixed>>
-     */
-    private function migrationState(PDO $pdo): array
-    {
-        try {
-            return $pdo->query(
-                'SELECT version, name, batch, executed_at
-                 FROM schema_migrations
-                 ORDER BY version'
-            )->fetchAll();
-        } catch (PDOException $e) {
-            return [];
-        }
-    }
-
-    /**
-     * @return list<array<string,mixed>>
-     */
-    private function settingsPreview(PDO $pdo): array
-    {
-        try {
-            return $pdo->query(
-                "SELECT setting_key, setting_value, group_name
-                 FROM pengaturan
-                 WHERE is_public = 1
-                 ORDER BY group_name, setting_key
-                 LIMIT 12"
-            )->fetchAll();
-        } catch (PDOException $e) {
-            return [];
         }
     }
 }
