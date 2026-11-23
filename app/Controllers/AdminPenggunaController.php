@@ -1,7 +1,16 @@
 <?php
 
+require_once __DIR__ . '/../Models/Pengguna.php';
+
 class AdminPenggunaController
 {
+    private Pengguna $penggunaModel;
+
+    public function __construct()
+    {
+        $this->penggunaModel = new Pengguna();
+    }
+
     private function guard(): array
     {
         Auth::start();
@@ -22,62 +31,17 @@ class AdminPenggunaController
     public function index(): void
     {
         $currentUser = $this->guard();
-        $pdo = Database::connection();
 
         $role = trim((string) ($_GET['role'] ?? ''));
         $status = trim((string) ($_GET['status'] ?? ''));
         $q = trim((string) ($_GET['q'] ?? ''));
 
-        $where = ['u.deleted_at IS NULL'];
-        $params = [];
+        // 1. Ambil daftar pengguna dan kelas melalui Model
+        $users = $this->penggunaModel->getAll($role, $status, $q);
+        $classes = $this->penggunaModel->getActiveClasses();
 
-        if ($role !== '' && in_array($role, ['admin', 'operator', 'kepala', 'guru', 'siswa', 'akreditasi'], true)) {
-            $where[] = 'u.role = ?';
-            $params[] = $role;
-        }
-
-        if ($status === 'active') {
-            $where[] = 'u.is_active = 1';
-        } elseif ($status === 'inactive') {
-            $where[] = 'u.is_active = 0';
-        }
-
-        if ($q !== '') {
-            $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q) . '%';
-            $where[] = '(u.name LIKE ? OR u.email LIKE ? OR u.username LIKE ? OR t.nip LIKE ? OR s.nis LIKE ?)';
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-        }
-
-        $whereSql = implode(' AND ', $where);
-
-        $sql = "SELECT u.*, 
-                       t.id AS teacher_id, t.nip, t.subject_specialty,
-                       s.id AS student_id, s.nis, s.nisn, s.class_id,
-                       c.name AS class_name
-                FROM pengguna u
-                LEFT JOIN guru t ON t.user_id = u.id
-                LEFT JOIN siswa s ON s.user_id = u.id
-                LEFT JOIN kelas c ON c.id = s.class_id
-                WHERE {$whereSql}
-                ORDER BY u.role ASC, u.name ASC";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $users = $stmt->fetchAll();
-
-        // Daftar kelas untuk modal siswa
-        $classes = $pdo->query("SELECT id, name, level FROM kelas WHERE is_active = 1 ORDER BY level ASC, name ASC")->fetchAll();
-
-        // Statistik
-        $statGuru = (int) $pdo->query("SELECT COUNT(*) FROM pengguna WHERE role = 'guru' AND deleted_at IS NULL")->fetchColumn();
-        $statSiswa = (int) $pdo->query("SELECT COUNT(*) FROM pengguna WHERE role = 'siswa' AND deleted_at IS NULL")->fetchColumn();
-        $statOperator = (int) $pdo->query("SELECT COUNT(*) FROM pengguna WHERE role = 'operator' AND deleted_at IS NULL")->fetchColumn();
-        $statKepala = (int) $pdo->query("SELECT COUNT(*) FROM pengguna WHERE role = 'kepala' AND deleted_at IS NULL")->fetchColumn();
-        $statAkreditasi = (int) $pdo->query("SELECT COUNT(*) FROM pengguna WHERE role = 'akreditasi' AND deleted_at IS NULL")->fetchColumn();
+        // 2. Ambil statistik pengguna per role melalui Model
+        $stats = $this->penggunaModel->getRoleStats();
 
         $data = [
             'title' => 'Pengguna & Akun Mobile App | Panel Admin MTs Al-Huda',
@@ -87,11 +51,11 @@ class AdminPenggunaController
             'users' => $users,
             'pengguna' => $users,
             'classes' => $classes,
-            'stat_guru' => $statGuru,
-            'stat_siswa' => $statSiswa,
-            'stat_operator' => $statOperator,
-            'stat_kepala' => $statKepala,
-            'stat_akreditasi' => $statAkreditasi,
+            'stat_guru' => $stats['guru'],
+            'stat_siswa' => $stats['siswa'],
+            'stat_operator' => $stats['operator'],
+            'stat_kepala' => $stats['kepala'],
+            'stat_akreditasi' => $stats['akreditasi'],
             'current_role' => $role,
             'current_status' => $status,
             'q' => $q,
@@ -132,8 +96,8 @@ class AdminPenggunaController
             return;
         }
 
-        // Enum `pengguna.role` di produksi hanya: admin, operator, kepala, guru, siswa.
-        // 'akreditasi' tidak ada di enum, jadi dipetakan ke operator agar INSERT tidak ditolak.
+        // Enum `pengguna.role` di database: admin, operator, kepala, guru, siswa.
+        // 'akreditasi' tidak ada di enum, dipetakan ke operator agar penyimpanan valid.
         if ($role === 'akreditasi') {
             $role = 'operator';
         }
@@ -146,22 +110,16 @@ class AdminPenggunaController
             $password = '123';
         }
 
-        $pdo = Database::connection();
-
-        // `uq_pengguna_email` berlaku untuk semua baris (termasuk yang di-soft-delete).
-        $check = $pdo->prepare("SELECT COUNT(*) FROM pengguna WHERE email = ?");
-        $check->execute([$email]);
-        if ((int) $check->fetchColumn() > 0) {
+        // Cek keunikan email via Model
+        if ($this->penggunaModel->emailExists($email)) {
             $_SESSION['_flash_error'] = 'Email sudah digunakan oleh pengguna lain.';
             header('Location: ' . base_url('admin/pengguna'));
             return;
         }
 
-        // Cek keunikan username jika diisi
+        // Cek keunikan username jika diisi via Model
         if ($username !== '') {
-            $checkU = $pdo->prepare("SELECT COUNT(*) FROM pengguna WHERE username = ?");
-            $checkU->execute([$username]);
-            if ((int) $checkU->fetchColumn() > 0) {
+            if ($this->penggunaModel->usernameExists($username)) {
                 $_SESSION['_flash_error'] = 'Nama pengguna (username) sudah digunakan.';
                 header('Location: ' . base_url('admin/pengguna'));
                 return;
@@ -171,58 +129,52 @@ class AdminPenggunaController
         }
 
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
         $gender = in_array($_POST['gender'] ?? 'L', ['L', 'P'], true) ? (string) $_POST['gender'] : 'L';
         $classId = !empty($_POST['class_id']) && (int) $_POST['class_id'] > 0 ? (int) $_POST['class_id'] : null;
 
-        // Siswa wajib punya kelas (kolom siswa.class_id NOT NULL di skema produksi).
+        // Siswa wajib memilih kelas
         if ($role === 'siswa' && $classId === null) {
             $_SESSION['_flash_error'] = 'Kelas wajib dipilih untuk akun siswa.';
             header('Location: ' . base_url('admin/pengguna'));
             return;
         }
 
-        $pdo->beginTransaction();
+        $userData = [
+            'name' => $name,
+            'nama' => $name,
+            'email' => $email,
+            'username' => $username,
+            'password_hash' => $passwordHash,
+            'role' => $role,
+        ];
+
+        $teacherData = null;
+        if ($role === 'guru') {
+            $teacherData = [
+                'nip' => !empty($_POST['nip']) ? trim((string) $_POST['nip']) : null,
+                'nuptk' => !empty($_POST['nuptk']) ? trim((string) $_POST['nuptk']) : null,
+                'subject_specialty' => !empty($_POST['subject_specialty']) ? trim((string) $_POST['subject_specialty']) : null,
+                'gender' => $gender,
+            ];
+        }
+
+        $studentData = null;
+        if ($role === 'siswa') {
+            $studentData = [
+                'nis' => !empty($_POST['nis']) ? trim((string) $_POST['nis']) : ('S' . date('Y') . sprintf('%04d', rand(1, 9999))),
+                'nisn' => !empty($_POST['nisn']) ? trim((string) $_POST['nisn']) : null,
+                'class_id' => $classId,
+                'gender' => $gender,
+            ];
+        }
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO pengguna (name, nama, email, username, password_hash, role, is_active, must_change_password, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, 1, 0, NOW(), NOW())");
-            $stmt->execute([
-                $name,
-                $name,
-                $email,
-                $username,
-                $passwordHash,
-                $role,
-            ]);
-
-            $newUserId = (int) $pdo->lastInsertId();
-
-            // Jika role Guru, buat record di tabel guru
-            if ($role === 'guru') {
-                $nip = !empty($_POST['nip']) ? trim((string) $_POST['nip']) : null;
-                $nuptk = !empty($_POST['nuptk']) ? trim((string) $_POST['nuptk']) : null;
-                $specialty = !empty($_POST['subject_specialty']) ? trim((string) $_POST['subject_specialty']) : null;
-
-                $tStmt = $pdo->prepare("INSERT INTO guru (user_id, nama_lengkap, nip, nuptk, gender, jenis_kelamin, subject_specialty, bidang_studi, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
-                $tStmt->execute([$newUserId, $name, $nip, $nuptk, $gender, $gender, $specialty, $specialty]);
-            }
-
-            // Jika role Siswa, buat record di tabel siswa
-            if ($role === 'siswa') {
-                $nis = !empty($_POST['nis']) ? trim((string) $_POST['nis']) : ('S' . date('Y') . sprintf('%04d', rand(1, 9999)));
-                $nisn = !empty($_POST['nisn']) ? trim((string) $_POST['nisn']) : null;
-
-                $sStmt = $pdo->prepare("INSERT INTO siswa (user_id, nama_lengkap, nis, nisn, class_id, kelas_id, gender, jenis_kelamin, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
-                $sStmt->execute([$newUserId, $name, $nis, $nisn, $classId, $classId, $gender, $gender]);
-            }
-
-            $pdo->commit();
+            $newUserId = $this->penggunaModel->create($userData, $teacherData, $studentData);
 
             Auth::log('pengguna.create', 'pengguna', $newUserId, "Membuat akun pengguna: {$email} ({$role})");
 
             $_SESSION['_flash_success'] = "Pengguna '{$name}' ({$role}) berhasil dibuat. Sandi awal: {$password}";
         } catch (Throwable $e) {
-            $pdo->rollBack();
             $_SESSION['_flash_error'] = 'Gagal membuat pengguna: ' . $e->getMessage();
         }
 
@@ -239,12 +191,7 @@ class AdminPenggunaController
             return;
         }
 
-        $pdo = Database::connection();
-        $tempPassword = '123';
-        $passwordHash = password_hash($tempPassword, PASSWORD_BCRYPT);
-
-        $stmt = $pdo->prepare("UPDATE pengguna SET password_hash = ?, must_change_password = 0, failed_login_attempts = 0, locked_until = NULL, updated_at = NOW() WHERE id = ? AND deleted_at IS NULL");
-        $stmt->execute([$passwordHash, $id]);
+        $this->penggunaModel->resetPassword($id, '123');
 
         Auth::log('pengguna.reset_password', 'pengguna', $id, "Mereset kata sandi pengguna ID {$id}");
 
@@ -268,9 +215,7 @@ class AdminPenggunaController
             return;
         }
 
-        $pdo = Database::connection();
-        $stmt = $pdo->prepare("UPDATE pengguna SET is_active = IF(is_active = 1, 0, 1), updated_at = NOW() WHERE id = ? AND deleted_at IS NULL");
-        $stmt->execute([$id]);
+        $this->penggunaModel->toggleStatus($id);
 
         Auth::log('pengguna.toggle_status', 'pengguna', $id, "Mengubah status aktif pengguna ID {$id}");
 
@@ -294,9 +239,7 @@ class AdminPenggunaController
             return;
         }
 
-        $pdo = Database::connection();
-        $stmt = $pdo->prepare("UPDATE pengguna SET deleted_at = NOW(), is_active = 0 WHERE id = ?");
-        $stmt->execute([$id]);
+        $this->penggunaModel->softDelete($id);
 
         Auth::log('pengguna.delete', 'pengguna', $id, "Menghapus (soft delete) pengguna ID {$id}");
 

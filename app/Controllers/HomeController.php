@@ -1,9 +1,17 @@
 <?php
 
 require_once __DIR__ . '/../Support/Database.php';
+require_once __DIR__ . '/../Models/Pengaturan.php';
 
 class HomeController
 {
+    private Pengaturan $pengaturanModel;
+
+    public function __construct()
+    {
+        $this->pengaturanModel = new Pengaturan();
+    }
+
     public function index(): void
     {
         $pdo = Database::connection();
@@ -21,8 +29,8 @@ class HomeController
         $facStmt = $pdo->query("SELECT * FROM fasilitas WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
         $facilities = $facStmt->fetchAll();
 
-        // 3. Pengaturan madrasah
-        $settingsRaw = $pdo->query("SELECT setting_key, setting_value FROM pengaturan WHERE is_public = 1")->fetchAll(PDO::FETCH_KEY_PAIR);
+        // 3. Pengaturan madrasah via Model
+        $settingsRaw = $this->pengaturanModel->getPublicSettings();
 
         $data = [
             'title' => 'MTs Al-Huda Gondang | Madrasah Berakhlak Mulia & Berprestasi',
