@@ -11,9 +11,7 @@ $facilities = $data['facilities'] ?? [];
             <div class="section-label" style="color: #4ADE80; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 11.5px; margin-bottom: 8px;">
                 Standar Sarana &amp; Prasarana (IA2024)
             </div>
-            <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin-bottom: 12px;">
-                Fasilitas &amp; Lingkungan <span>Belajar</span>
-            </h1>
+            <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin-bottom: 12px;">Fasilitas &amp; Lingkungan <span style="color: #4ADE80;">Belajar</span></h1>
             <p style="color: rgba(255,255,255,.85); max-width: 680px; font-size: 14.5px; line-height: 1.6;">
                 Sarana prasarana terstandarisasi yang bersih, representatif, dan aman untuk menjamin kenyamanan belajar, ibadah, dan pengembangan bakat santri MTs Al-Huda Gondang.
             </p>
