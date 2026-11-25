@@ -95,3 +95,84 @@ if (!function_exists('e')) {
         return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }
+
+if (!function_exists('doc_type_badge')) {
+    function doc_type_badge(?string $mime, string $path = ''): array
+    {
+        $mime = strtolower((string) $mime);
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        if (strpos($mime, 'pdf') !== false || $ext === 'pdf') {
+            return [
+                'type'   => 'PDF',
+                'color'  => '#DC2626',
+                'bg'     => '#FEE2E2',
+                'border' => '#FECACA',
+                'icon'   => 'pdf',
+            ];
+        }
+
+        if (
+            strpos($mime, 'word') !== false || 
+            strpos($mime, 'wordprocessingml') !== false || 
+            in_array($ext, ['doc', 'docx'], true)
+        ) {
+            return [
+                'type'   => 'DOCX',
+                'color'  => '#2563EB',
+                'bg'     => '#DBEAFE',
+                'border' => '#BFDBFE',
+                'icon'   => 'word',
+            ];
+        }
+
+        if (
+            strpos($mime, 'excel') !== false || 
+            strpos($mime, 'spreadsheetml') !== false || 
+            in_array($ext, ['xls', 'xlsx'], true)
+        ) {
+            return [
+                'type'   => 'EXCEL',
+                'color'  => '#16A34A',
+                'bg'     => '#DCFCE7',
+                'border' => '#BBF7D0',
+                'icon'   => 'excel',
+            ];
+        }
+
+        if (
+            strpos($mime, 'image/') === 0 || 
+            in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)
+        ) {
+            return [
+                'type'   => 'GAMBAR',
+                'color'  => '#D97706',
+                'bg'     => '#FEF3C7',
+                'border' => '#FDE68A',
+                'icon'   => 'image',
+            ];
+        }
+
+        return [
+            'type'   => $ext !== '' ? strtoupper($ext) : 'BERKAS',
+            'color'  => '#475569',
+            'bg'     => '#F1F5F9',
+            'border' => '#E2E8F0',
+            'icon'   => 'file',
+        ];
+    }
+}
+
+if (!function_exists('format_bytes')) {
+    function format_bytes(int $bytes): string
+    {
+        if ($bytes <= 0) {
+            return '';
+        }
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $power = $bytes > 0 ? (int) floor(log($bytes, 1024)) : 0;
+        $power = min($power, count($units) - 1);
+        $value = $bytes / (1024 ** $power);
+        return round($value, $power > 1 ? 1 : 0) . ' ' . $units[$power];
+    }
+}

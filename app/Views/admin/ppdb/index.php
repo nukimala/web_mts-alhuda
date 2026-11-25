@@ -1,6 +1,6 @@
 <?php
 ob_start();
-$settings = $data['settings'] ?? [];
+$settings = $data['settings'] ?? $data['pengaturan'] ?? [];
 $documents = $data['documents'] ?? [];
 ?>
 
@@ -117,7 +117,10 @@ $documents = $data['documents'] ?? [];
                                     <div class="t-sub"><?= htmlspecialchars($doc['file_path'], ENT_QUOTES, 'UTF-8') ?></div>
                                 </td>
                                 <td>
-                                    <span class="pill red"><?= htmlspecialchars($doc['mime_type'] ?? 'FILE', ENT_QUOTES, 'UTF-8') ?></span>
+                                    <?php $dInfo = doc_type_badge($doc['mime_type'] ?? '', $doc['file_path'] ?? ''); ?>
+                                    <span class="pill" style="background:<?= $dInfo['bg'] ?>;color:<?= $dInfo['color'] ?>;border:1px solid <?= $dInfo['border'] ?>;font-weight:700">
+                                        <?= $dInfo['type'] ?>
+                                    </span>
                                 </td>
                                 <td>
                                     <form method="post" action="<?= base_url('admin/ppdb/toggle-doc/' . $doc['id']) ?>" style="display:inline">
@@ -130,7 +133,7 @@ $documents = $data['documents'] ?? [];
                                 <td><b><?= number_format((int) $doc['download_count'], 0, ',', '.') ?></b></td>
                                 <td>
                                     <div class="row-actions">
-                                        <a class="icon-btn" href="<?= base_url($doc['file_path']) ?>" target="_blank" title="Unduh / Lihat">
+                                        <a class="icon-btn" href="<?= base_url('ppdb/download/' . $doc['id']) ?>" target="_blank" title="Unduh / Lihat">
                                             <svg viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.6 2.4A2 2 0 0 0 4.5 21h15a2 2 0 0 0 1.9-1.6L22 17"/></svg>
                                         </a>
                                         <form method="post" action="<?= base_url('admin/ppdb/delete-doc/' . $doc['id']) ?>" onsubmit="return confirm('Hapus dokumen ini?');" style="display:inline">
