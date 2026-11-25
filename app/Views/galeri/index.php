@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/navbar.php';
 
@@ -11,14 +12,69 @@ $perHalaman = 9;
 // Kalau controller belum mengirim $data['items'], dipakai DUMMY di bawah ini.
 if (!isset($data['items'])) {
     $data = [
-        'albums' => ['Akademik & Literasi', 'Ekstrakurikuler Pramuka', 'Kesehatan & Olahraga', 'Kesenian & Prestasi', 'Paguyuban & Komite', 'Seni & Religi'],
-        'items'  => [
-            ['id' => 1, 'title' => 'Aktivitas Belajar dan Memperkaya Khazanah Ilmu',            'image_path' => 'assets/images/Belajar di Perpustakaan.jpg',                    'album' => 'Akademik & Literasi',     'caption' => 'Santri tekun mengkaji buku referensi di perpustakaan madrasah.',          'sort_order' => 1, 'is_active' => 1],
-            ['id' => 2, 'title' => 'Penampilan Seni Hadrah Santri MTs Al-Huda',                 'image_path' => 'assets/images/Grup Sholawat  MTS Al-Huda.jpg',                 'album' => 'Seni & Religi',           'caption' => 'Grup hadrah santri membawakan sholawat dalam acara madrasah.',            'sort_order' => 2, 'is_active' => 1],
-            ['id' => 3, 'title' => 'Upacara Pembukaan Jambore Cabang Kontingen Regu Penggalang', 'image_path' => 'assets/images/Mengikuti Upacara Pembukaan Jambore Cabang.jpg', 'album' => 'Ekstrakurikuler Pramuka', 'caption' => 'Kontingen Pramuka MTs Al-Huda mengikuti upacara pembukaan jambore cabang.', 'sort_order' => 3, 'is_active' => 1],
-            ['id' => 4, 'title' => 'Semarak Senam Bersama Dewan Asatidz dan Seluruh Santri',     'image_path' => 'assets/images/Senam Bersama.jpg',                              'album' => 'Kesehatan & Olahraga',    'caption' => 'Senam kebugaran jasmani bersama guru dan seluruh santri.',                'sort_order' => 4, 'is_active' => 1],
-            ['id' => 5, 'title' => 'Rapat Pleno Silaturahmi Paguyuban Wali Santri MTs Al-Huda',  'image_path' => 'assets/images/Pertemuan Wali Santri.jpg',                      'album' => 'Paguyuban & Komite',      'caption' => 'Sinergi hangat antara pimpinan madrasah dan wali santri.',                'sort_order' => 5, 'is_active' => 1],
-            ['id' => 6, 'title' => 'Harmoni Nada & Formasi Korps Drumband Gita Al-Huda',        'image_path' => 'assets/images/Drumband.jpg',                                   'album' => 'Kesenian & Prestasi',     'caption' => 'Unit korps drumband MTs Al-Huda tampil dengan formasi yang kompak.',      'sort_order' => 6, 'is_active' => 1],
+        'albums' => [
+            'Akademik & Literasi',
+            'Ekstrakurikuler Pramuka',
+            'Kesehatan & Olahraga',
+            'Kesenian & Prestasi',
+            'Paguyuban & Komite',
+            'Seni & Religi',
+        ],
+        'items' => [
+            [
+                'id' => 1,
+                'title' => 'Aktivitas Belajar dan Memperkaya Khazanah Ilmu',
+                'image_path' => 'assets/images/Belajar di Perpustakaan.jpg',
+                'album' => 'Akademik & Literasi',
+                'caption' => 'Santri tekun mengkaji buku referensi di perpustakaan madrasah.',
+                'sort_order' => 1,
+                'is_active' => 1,
+            ],
+            [
+                'id' => 2,
+                'title' => 'Penampilan Seni Hadrah Santri MTs Al-Huda',
+                'image_path' => 'assets/images/Grup Sholawat  MTS Al-Huda.jpg',
+                'album' => 'Seni & Religi',
+                'caption' => 'Grup hadrah santri membawakan sholawat dalam acara madrasah.',
+                'sort_order' => 2,
+                'is_active' => 1,
+            ],
+            [
+                'id' => 3,
+                'title' => 'Upacara Pembukaan Jambore Cabang Kontingen Regu Penggalang',
+                'image_path' => 'assets/images/Mengikuti Upacara Pembukaan Jambore Cabang.jpg',
+                'album' => 'Ekstrakurikuler Pramuka',
+                'caption' => 'Kontingen Pramuka MTs Al-Huda mengikuti upacara pembukaan jambore cabang.',
+                'sort_order' => 3,
+                'is_active' => 1,
+            ],
+            [
+                'id' => 4,
+                'title' => 'Semarak Senam Bersama Dewan Asatidz dan Seluruh Santri',
+                'image_path' => 'assets/images/Senam Bersama.jpg',
+                'album' => 'Kesehatan & Olahraga',
+                'caption' => 'Senam kebugaran jasmani bersama guru dan seluruh santri.',
+                'sort_order' => 4,
+                'is_active' => 1,
+            ],
+            [
+                'id' => 5,
+                'title' => 'Rapat Pleno Silaturahmi Paguyuban Wali Santri MTs Al-Huda',
+                'image_path' => 'assets/images/Pertemuan Wali Santri.jpg',
+                'album' => 'Paguyuban & Komite',
+                'caption' => 'Sinergi hangat antara pimpinan madrasah dan wali santri.',
+                'sort_order' => 5,
+                'is_active' => 1,
+            ],
+            [
+                'id' => 6,
+                'title' => 'Harmoni Nada & Formasi Korps Drumband Gita Al-Huda',
+                'image_path' => 'assets/images/Drumband.jpg',
+                'album' => 'Kesenian & Prestasi',
+                'caption' => 'Unit korps drumband MTs Al-Huda tampil dengan formasi yang kompak.',
+                'sort_order' => 6,
+                'is_active' => 1,
+            ],
         ],
     ];
 }
@@ -28,60 +84,27 @@ $items = array_values(array_filter($data['items'], fn($it) => (int) ($it['is_act
 usort($items, fn($a, $b) => (int) $a['sort_order'] <=> (int) $b['sort_order']);
 
 // Foto tanpa album ditampilkan sebagai "Umum" (sama seperti di admin)
-foreach ($items as &$it) { if (empty($it['album'])) $it['album'] = 'Umum'; }
+foreach ($items as &$it) {
+    if (empty($it['album']))
+        $it['album'] = 'Umum';
+}
 unset($it);
 
 // Daftar tombol filter: album dari controller (urutan sama dengan dropdown admin), hanya yang punya foto
 $jumlah = array_count_values(array_column($items, 'album'));
 $daftarAlbum = $data['albums'] ?? array_keys($jumlah);
-if (isset($jumlah['Umum']) && !in_array('Umum', $daftarAlbum, true)) $daftarAlbum[] = 'Umum';
+if (isset($jumlah['Umum']) && !in_array('Umum', $daftarAlbum, true))
+    $daftarAlbum[] = 'Umum';
 $daftarAlbum = array_values(array_filter($daftarAlbum, fn($a) => !empty($jumlah[$a])));
 
-function gx_h($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
+function gx_h($s)
+{
+    return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+}
+
 ?>
 
-<style>
-.gx-section{background:#e9f9ef}
-.gx-filter{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px;margin-bottom:28px}
-.gx-chip{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:0 0 auto;width:auto;height:36px;padding:0 14px;border-radius:999px;border:0;background:#fff;color:#2b3a31;font:inherit;font-size:13px;line-height:1;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .15s}
-.gx-chip:hover{box-shadow:0 3px 10px rgba(0,0,0,.14)}
-.gx-chip.active{background:#14532d;color:#fff;font-weight:600}
-.gx-chip .gx-n{display:none;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#fff;color:#166534;font-size:12px;font-weight:700;align-items:center;justify-content:center}
-.gx-chip.active .gx-n{display:inline-flex}
-.gx-chip:focus-visible,.gx-card:focus-visible,.gx-pg button:focus-visible{outline:2px solid #0ea5e9;outline-offset:2px}
-
-.gx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media (max-width:900px){.gx-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:560px){.gx-grid{grid-template-columns:1fr}}
-
-.gx-card{position:relative;display:block;width:100%;padding:0;border:0;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#cfe9d8;cursor:zoom-in;text-align:left;font:inherit;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.12)}
-.gx-card.is-hidden{display:none}
-.gx-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
-.gx-card:hover img{transform:scale(1.05)}
-.gx-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.45) 38%,rgba(0,0,0,0) 65%)}
-.gx-badge{position:absolute;top:12px;left:12px;z-index:2;background:#fff;color:#166534;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
-.gx-info{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 16px}
-.gx-title{font-size:15px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px}
-.gx-cap{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.gx-empty{display:none;text-align:center;padding:48px 0;color:#4b6b57}
-.gx-foot{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:32px;font-size:13px;color:#3f5a49}
-.gx-pg{display:flex;align-items:center;gap:8px}
-.gx-pg button{min-width:38px;height:38px;padding:0 12px;border:0;border-radius:10px;background:#fff;color:#2b3a31;font:inherit;font-size:14px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.gx-pg button:hover:not(:disabled):not(.active){box-shadow:0 3px 10px rgba(0,0,0,.14)}
-.gx-pg button.active{background:#166534;color:#fff;font-weight:700}
-.gx-pg button:disabled{color:#9aab9f;cursor:default;box-shadow:none;background:transparent}
-.gx-pg .gx-dots{color:#6b7a70;padding:0 2px}
-
-.gx-dialog{border:0;border-radius:16px;padding:0;max-width:820px;width:94%;box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden}
-.gx-dialog::backdrop{background:rgba(0,0,0,.65)}
-.gx-dialog img{display:block;width:100%;max-height:68vh;object-fit:contain;background:#111}
-.gx-meta{padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.gx-meta .gx-tag{display:inline-block;background:#dcfce7;color:#166534;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
-.gx-meta h3{font-size:17px;line-height:1.35;margin:8px 0 4px}
-.gx-meta p{font-size:14px;color:#5d6d63;line-height:1.5}
-.gx-close{padding:8px 16px;border-radius:8px;border:1px solid #d9e2dc;background:#fff;font:inherit;font-size:13px;cursor:pointer;flex-shrink:0}
-</style>
+<link rel="stylesheet" href="<?= base_url('css/galeri.css') ?>">
 
 <main>
     <!-- Hero: disamakan dengan halaman Berita -->
@@ -101,16 +124,20 @@ function gx_h($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
         <div class="container">
 
             <div class="gx-filter" role="group" aria-label="Filter album galeri">
-                <button type="button" class="gx-chip active" data-filter="semua">Semua <span class="gx-n" id="gxBadge"><?= count($items) ?></span></button>
+                <button type="button" class="gx-chip active" data-filter="semua">Semua <span class="gx-n" id="gxBadge"><?= count(
+                    $items,
+                ) ?></span></button>
                 <?php foreach ($daftarAlbum as $alb): ?>
-                    <button type="button" class="gx-chip" data-filter="<?= gx_h($alb) ?>"><?= gx_h($alb) ?> <span class="gx-n"></span></button>
+                    <button type="button" class="gx-chip" data-filter="<?= gx_h($alb) ?>"><?= gx_h(
+                        $alb,
+                    ) ?> <span class="gx-n"></span></button>
                 <?php endforeach; ?>
             </div>
 
             <div class="gx-grid" id="gxGrid">
                 <?php foreach ($items as $it):
                     $src = base_url($it['image_path']);
-                ?>
+                    ?>
                     <button type="button" class="gx-card" data-album="<?= gx_h($it['album']) ?>"
                             data-src="<?= gx_h($src) ?>"
                             data-judul="<?= gx_h($it['title']) ?>"
@@ -228,4 +255,4 @@ function gx_h($s) { return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8'); }
 })();
 </script>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../layouts/footer.php';
