@@ -204,14 +204,25 @@ if ($page === 'admin') {
                 case '':
                     (new AdminPpdbController())->index();
                     return;
-                case 'store':
-                    (new AdminPpdbController())->store();
+                case 'update-info':
+                    (new AdminPpdbController())->updateInfo();
                     return;
+                case 'store-doc':
+                case 'store-document':
+                case 'store':
+                    (new AdminPpdbController())->storeDocument();
+                    return;
+                case 'toggle-doc':
                 case 'toggle-document':
                     (new AdminPpdbController())->toggleDocument((int) ($segments[3] ?? 0));
                     return;
+                case 'delete-doc':
                 case 'delete-document':
                     (new AdminPpdbController())->deleteDocument((int) ($segments[3] ?? 0));
+                    return;
+                default:
+                    http_response_code(404);
+                    (new ErrorController())->notFound();
                     return;
             }
             break;
@@ -297,6 +308,10 @@ if ($page === 'admin') {
             (new ErrorController())->notFound();
             return;
     }
+
+    http_response_code(404);
+    (new ErrorController())->notFound();
+    return;
 }
 
 // ---------------------------------------------------------------------------
@@ -322,6 +337,11 @@ if ($page === 'kontak' && strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'P
 
 if ($page === 'berita' && isset($segments[1])) {
     (new BeritaController())->detail($segments[1]);
+    return;
+}
+
+if ($page === 'ppdb' && isset($segments[1]) && in_array($segments[1], ['download', 'unduh'], true) && isset($segments[2])) {
+    (new PpdbController())->download((int) $segments[2]);
     return;
 }
 
