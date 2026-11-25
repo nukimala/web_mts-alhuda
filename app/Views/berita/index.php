@@ -14,7 +14,7 @@ $totalPages = $data['total_pages'] ?? 1;
             <div class="section-label" style="color: #4ADE80; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 11.5px; margin-bottom: 8px;">
                 Pusat Informasi &amp; Warta
             </div>
-            <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin-bottom: 12px;">Kabar Terbaru dari <span>Madrasah</span></h1>
+            <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin-bottom: 12px;">Kabar Terbaru dari <span style="color: #4ADE80;">Madrasah</span></h1>
             <p style="color: rgba(255,255,255,.85); max-width: 640px; font-size: 14.5px;">
                 Dokumentasi kegiatan, prestasi siswa, agenda penting, dan pengumuman resmi MTs Al-Huda Gondang.
             </p>
