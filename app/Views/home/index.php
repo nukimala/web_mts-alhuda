@@ -48,7 +48,7 @@ $facilities = $data['facilities'] ?? [];
         <div class="container speech-grid">
             <div class="speech-photo-wrap">
                 <div class="speech-photo-box">
-                    <img src="<?= base_url('assets/images/kepalamadrasah.png') ?>"
+                    <img src="<?= base_url('assets/images/pakharis.jpeg') ?>"
                          alt="Kepala Madrasah MTs Al-Huda Gondang"
                          width="220"
                          height="270"
