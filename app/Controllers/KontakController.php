@@ -1,23 +1,26 @@
 <?php
 
-require_once __DIR__ . '/../Support/Database.php';
-
+/**
+ * Controller Halaman Kontak Publik & Penerimaan Pesan Pengunjung.
+ *
+ * Seluruh validasi, sanitasi, dan query database didelegasikan ke Model `Kontak`.
+ */
 class KontakController
 {
+    private Kontak $kontak;
+
+    public function __construct(?Kontak $kontak = null)
+    {
+        $this->kontak = $kontak ?? new Kontak();
+    }
+
     public function index(): void
     {
         Auth::start();
-        $pdo = Database::connection();
-
-        $rows = $pdo->query("SELECT setting_key, setting_value FROM pengaturan WHERE group_name = 'kontak' OR is_public = 1")->fetchAll();
-        $settings = [];
-        foreach ($rows as $r) {
-            $settings[$r['setting_key']] = $r['setting_value'];
-        }
 
         $data = [
             'title' => 'Kontak & Layanan Informasi | MTs Al-Huda Gondang',
-            'settings' => $settings,
+            'settings' => $this->kontak->getContactSettings(),
             'flash' => $_SESSION['_flash_success'] ?? null,
             'error' => $_SESSION['_flash_error'] ?? null,
             'old' => $_SESSION['_old_input'] ?? [],
@@ -38,56 +41,39 @@ class KontakController
             exit;
         }
 
-        $name = trim((string) ($_POST['name'] ?? ''));
-        $email = trim((string) ($_POST['email'] ?? ''));
-        $phone = trim((string) ($_POST['phone'] ?? ''));
-        $subject = trim((string) ($_POST['subject'] ?? ''));
-        $message = trim((string) ($_POST['message'] ?? ''));
-
-        $_SESSION['_old_input'] = [
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'subject' => $subject,
-            'message' => $message,
+        $rawInput = [
+            'name' => (string) ($_POST['name'] ?? ''),
+            'email' => (string) ($_POST['email'] ?? ''),
+            'phone' => (string) ($_POST['phone'] ?? ''),
+            'subject' => (string) ($_POST['subject'] ?? ''),
+            'message' => (string) ($_POST['message'] ?? ''),
         ];
 
-        // Validasi
-        if ($name === '' || mb_strlen($name) < 2) {
-            $_SESSION['_flash_error'] = 'Nama lengkap wajib diisi minimal 2 karakter.';
+        $_SESSION['_old_input'] = $rawInput;
+
+        $ip = RateLimiter::clientIp();
+        $rate = RateLimiter::hit('kontak_form:' . $ip, 5, 300);
+        if (!$rate['allowed']) {
+            $minutes = max(1, (int) ceil($rate['retry_after'] / 60));
+            $_SESSION['_flash_error'] = "Terlalu banyak pengiriman pesan dari jaringan Anda. Silakan coba lagi dalam {$minutes} menit.";
             header('Location: ' . base_url('kontak'));
             exit;
         }
 
-        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['_flash_error'] = 'Alamat email tidak valid.';
-            header('Location: ' . base_url('kontak'));
-            exit;
-        }
-
-        if ($message === '' || mb_strlen($message) < 5) {
-            $_SESSION['_flash_error'] = 'Isi pesan wajib diisi minimal 5 karakter.';
+        $validation = $this->kontak->validateSubmission($rawInput);
+        if (!$validation['valid']) {
+            $_SESSION['_flash_error'] = $validation['error'];
             header('Location: ' . base_url('kontak'));
             exit;
         }
 
         try {
-            $pdo = Database::connection();
-            $stmt = $pdo->prepare("
-                INSERT INTO pesan_kontak (name, email, phone, subject, message, status, created_at, updated_at)
-                VALUES (:name, :email, :phone, :subject, :message, 'baru', NOW(), NOW())
-            ");
-            $stmt->execute([
-                ':name' => mb_substr($name, 0, 120),
-                ':email' => mb_substr($email, 0, 160),
-                ':phone' => $phone !== '' ? mb_substr($phone, 0, 24) : null,
-                ':subject' => $subject !== '' ? mb_substr($subject, 0, 200) : null,
-                ':message' => $message,
-            ]);
+            $userAgent = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+            $this->kontak->createMessage($validation['data'], $ip, $userAgent);
 
             unset($_SESSION['_old_input']);
             $_SESSION['_flash_success'] = 'Terima kasih, pesan Anda telah berhasil dikirim ke pihak MTs Al-Huda. Kami akan segera menindaklanjuti pesan Anda.';
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             $_SESSION['_flash_error'] = 'Terjadi kesalahan sistem saat mengirim pesan. Silakan hubungi kami via telepon atau WhatsApp.';
         }
 

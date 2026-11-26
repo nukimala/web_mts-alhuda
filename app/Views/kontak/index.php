@@ -7,6 +7,7 @@ $phone = $settings['phone'] ?? $settings['contact_phone'] ?? '(0358) 123456';
 $email = $settings['email'] ?? $settings['contact_email'] ?? 'info@mtsalhuda.sch.id';
 $wa = $settings['whatsapp'] ?? $settings['contact_whatsapp'] ?? '0812-3456-7890';
 $address = $settings['school_address'] ?? $settings['contact_address'] ?? 'Jl. Letjend Suprapto No. 16, Desa Pandean, Kec. Gondang, Nganjuk, Jawa Timur';
+$serviceHours = $settings['service_hours'] ?? 'Senin sampai Sabtu: 07.00 - 14.00 WIB (Kecuali hari libur nasional)';
 $old = $data['old'] ?? [];
 ?>
 
@@ -82,7 +83,7 @@ $old = $data['old'] ?? [];
                         <article class="doc-item" style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; padding: 18px;">
                             <span class="doc-label">Jam Pelayanan Pelajar &amp; Wali Santri</span>
                             <div class="doc-value" style="font-size: 14px;">
-                                Senin sampai Sabtu: 07.00 - 14.00 WIB (Kecuali hari libur nasional)
+                                <?= htmlspecialchars($serviceHours, ENT_QUOTES, 'UTF-8') ?>
                             </div>
                         </article>
                     </div>
