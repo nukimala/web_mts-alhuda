@@ -8,9 +8,8 @@ $perHalaman = 9;
 $data['items'] = $data['items'] ?? [];
 $data['albums'] = $data['albums'] ?? [];
 
-// Hanya foto aktif, urut berdasarkan sort_order
-$items = array_values(array_filter($data['items'], fn($it) => (int) ($it['is_active'] ?? 0) === 1));
-usort($items, fn($a, $b) => (int) ($a['sort_order'] ?? 0) <=> (int) ($b['sort_order'] ?? 0));
+// Data sudah difilter (is_active) dan diurutkan oleh Model Galeri
+$items = $data['items'];
 
 // Foto tanpa album ditampilkan sebagai "Umum" (sama seperti di admin)
 foreach ($items as &$it) {
