@@ -1198,3 +1198,195 @@ table.data .t-sub {
 }
 .switch.on { background: var(--green); }
 .switch.on .track { transform: translateX(16px); }
+
+/* ==========================================================================
+   Halaman Login Admin (Auth)
+   Mengatur tata letak, kartu login, logo, input sandi, dan footer.
+   ========================================================================== */
+
+/* Latar belakang halaman login dengan gradasi hijau lembut dan susunan vertikal */
+body.auth {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F0FDF4 0%, #F8FAFC 50%, #E9F9EF 100%);
+}
+
+/* Pembungkus utama agar kartu login selalu berada di tengah layar */
+.login-shell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+/* Membatasi lebar maksimal kartu login agar proporsional di desktop maupun HP */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Kartu utama login dengan aksen garis hijau di atas dan bayangan lembut */
+.login-card .card {
+    border: 1px solid var(--border-card);
+    border-top: 4px solid var(--green);
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+/* Memberi ruang dalam (padding) yang lega di dalam kartu login */
+.login-card .card-pad {
+    padding: 32px 28px 28px;
+}
+
+/* Mengatur ukuran logo madrasah agar tidak terlalu besar dan rata tengah */
+.login-logo {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    margin: 0 auto 16px;
+}
+
+/* Judul utama pada kartu login */
+.login-card h1 {
+    font-size: 21px;
+    font-weight: 800;
+    text-align: center;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+/* Subjudul di bawah judul utama */
+.login-card .sub {
+    font-size: 13px;
+    color: var(--gray);
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Penanda input jika terjadi error validasi/login gagal */
+.field.invalid input {
+    border-color: var(--red);
+    background: var(--red-soft);
+}
+
+.field.invalid input:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+/* Pembungkus input kata sandi agar tombol "Lihat/Sembunyi" bisa diletakkan di kanan dalam input */
+.pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Memberi jarak kanan pada input sandi supaya teks tidak tertimpa tombol Lihat */
+.pw-wrap input {
+    padding-right: 78px;
+}
+
+/* Tombol toggle untuk menampilkan atau menyembunyikan kata sandi */
+.pw-wrap .toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--green);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+.pw-wrap .toggle:hover {
+    background: var(--green-light);
+    color: var(--green-hover);
+}
+
+/* Baris opsi "Ingat saya" di kiri dan link "Lupa kata sandi?" di kanan */
+.remember {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-size: 12.5px;
+}
+
+.remember label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--gray);
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+}
+
+.remember input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--green);
+    cursor: pointer;
+    margin: 0;
+}
+
+.remember a {
+    font-weight: 600;
+}
+
+.remember a:hover {
+    text-decoration: underline;
+}
+
+/* Tombol Masuk dibuat sedikit lebih tinggi agar nyaman diklik */
+.login-card .btn-primary {
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Kelas utilitas teks kecil & redup untuk catatan kaki dan link kembali */
+.tiny {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.muted {
+    color: var(--gray);
+}
+
+.muted a {
+    color: var(--gray);
+    font-weight: 600;
+}
+
+.muted a:hover {
+    color: var(--green);
+}
+
+/* Strip footer tipis di bagian paling bawah halaman login */
+.foot-strip {
+    text-align: center;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--gray);
+    border-top: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* Penyesuaian tampilan untuk layar HP (lebar maksimal 480px) */
+@media (max-width: 480px) {
+    .login-card .card-pad {
+        padding: 24px 20px;
+    }
+
+    .remember {
+        flex-wrap: wrap;
+    }
+}
