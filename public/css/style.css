@@ -527,21 +527,21 @@ button:disabled, [aria-disabled="true"] {
 .site-footer h3 {
     margin: 0 0 8px;
     color: var(--white);
-    font-size: 10px;
+    font-size: 18px;
     font-weight: 800;
 }
 .site-footer h4 {
     margin: 0 0 9px;
     color: var(--white);
-    font-size: 9px;
+    font-size: 16px;
     font-weight: 800;
 }
 .site-footer p, .site-footer a {
     display: block;
-    font-size: 8px;
+    font-size: 14px;
     line-height: 1.65;
-    margin: 0 0 6px;
-    color: rgba(255,255,255,.58);
+    margin: 0;
+    color: rgba(255,255,255,.85);
 }
 .site-footer a:hover {
     color: var(--white);
@@ -553,8 +553,8 @@ button:disabled, [aria-disabled="true"] {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    font-size: 7px;
-    color: rgba(255,255,255,.38);
+    font-size: 13px;
+    color: rgba(255,255,255,.72);
 }
 @media (max-width: 900px) {
     .nav-menu {

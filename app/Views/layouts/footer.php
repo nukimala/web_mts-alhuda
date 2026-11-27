@@ -1,28 +1,28 @@
-<footer class="site-footer" style="background: #0B3D1E; color: rgba(255,255,255,.8); padding: 50px 0 24px; font-size: 13.5px; border-top: 4px solid #15803D;">
+<footer class="site-footer" style="background: #0B3D1E; color: rgba(255,255,255,.85); padding: 50px 0 24px; font-size: 14px; border-top: 4px solid #15803D;">
     <div class="container footer-grid" style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 36px; margin-bottom: 40px;">
         <!-- Profil Madrasah -->
         <div class="footer-about">
             <a href="<?= url('/') ?>" style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px; text-decoration: none;">
                 <img src="<?= asset('assets/images/LOGO_MTS 1.png') ?>" alt="Logo MTs Al-Huda" width="44" height="44" style="width: 44px; height: 44px; object-fit: contain; background: #fff; border-radius: 8px; padding: 4px;">
                 <div>
-                    <h3 style="color: #ffffff; font-size: 17px; font-weight: 800; margin: 0; line-height: 1.2;">MTs Al-Huda Gondang</h3>
-                    <span style="font-size: 11px; color: #4ADE80; font-weight: 700;">Terakreditasi "A" (Unggul) BAN-PDM</span>
+                    <h3 style="color: #ffffff; font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2;">MTs Al-Huda Gondang</h3>
+                    <span style="font-size: 12.5px; color: #4ADE80; font-weight: 700;">Terakreditasi "A" (Unggul) BAN-PDM</span>
                 </div>
             </a>
-            <p style="color: #E2E8F0; line-height: 1.65; font-size: 13px; margin-bottom: 14px;">
+            <p style="color: #E2E8F0; line-height: 1.65; font-size: 14px; margin-bottom: 14px;">
                 Madrasah Tsanawiyah terpadu yang memadukan kurikulum nasional dan nilai-nilai kepesantrenan untuk membina generasi cerdas, mandiri, dan berakhlakul karimah.
             </p>
-            <div style="font-size: 12px; color: #BBF7D0;">
+            <div style="font-size: 13px; color: #BBF7D0;">
                 NPSN: <strong>20582910</strong> • NSM: <strong>121235180039</strong>
             </div>
         </div>
 
         <!-- Navigasi Utama -->
         <div>
-            <h4 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
+            <h4 style="color: #ffffff; font-size: 16px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
                 Navigasi Cepat
             </h4>
-            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
                 <a href="<?= url('/') ?>" style="color: #E2E8F0; text-decoration: none;">Beranda</a>
                 <a href="<?= url('profil') ?>" style="color: #E2E8F0; text-decoration: none;">Profil Madrasah</a>
                 <a href="<?= url('akademik') ?>" style="color: #E2E8F0; text-decoration: none;">Kurikulum &amp; Jadwal</a>
@@ -34,10 +34,10 @@
 
         <!-- Layanan & Informasi -->
         <div>
-            <h4 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
+            <h4 style="color: #ffffff; font-size: 16px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
                 Layanan Publik
             </h4>
-            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
                 <a href="<?= url('ppdb') ?>" style="color: #4ADE80; font-weight: 700; text-decoration: none;">Pendaftaran PPDB Online</a>
                 <a href="<?= url('akademik#jadwal') ?>" style="color: #E2E8F0; text-decoration: none;">Jadwal Pelajaran Siswa</a>
                 <a href="<?= url('kontak') ?>" style="color: #E2E8F0; text-decoration: none;">Hubungi Tata Usaha</a>
@@ -47,10 +47,10 @@
 
         <!-- Alamat & Jam Kerja -->
         <div>
-            <h4 style="color: #ffffff; font-size: 15px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
+            <h4 style="color: #ffffff; font-size: 16px; font-weight: 800; margin-bottom: 16px; border-left: 3px solid #4ADE80; padding-left: 8px;">
                 Kontak &amp; Alamat
             </h4>
-            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12.5px; color: #E2E8F0;">
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #E2E8F0;">
                 <div>📍 Jl. Letjend Suprapto No. 16, Desa Pandean, Kec. Gondang, Kab. Nganjuk, Jawa Timur</div>
                 <div>☎ Telepon: (0358) 123456</div>
                 <div>✉ Email: info@mtsalhuda.sch.id</div>
@@ -60,7 +60,7 @@
     </div>
 
     <!-- Copyright -->
-    <div class="container" style="border-top: 1px solid rgba(255,255,255,.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 12px; color: #CBD5E1;">
+    <div class="container" style="border-top: 1px solid rgba(255,255,255,.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 13px; color: #CBD5E1;">
         <span>© <?= date('Y') ?> MTs Al-Huda Gondang. Terakreditasi "A" BAN-PDM. Seluruh hak cipta dilindungi.</span>
         <span>Sistem Informasi Madrasah Terpadu</span>
     </div>
