@@ -70,6 +70,24 @@ $old = $data['old'] ?? [];
             </div>
 
             <div class="field">
+                <label for="condition">Kondisi / Status Fasilitas</label>
+                <?php
+                $selectedCondition = $old['condition'] ?? $facility['condition'] ?? $facility['kondisi'] ?? 'baik';
+                if (!array_key_exists($selectedCondition, fasilitas_conditions())) {
+                    $selectedCondition = 'baik';
+                }
+                ?>
+                <select id="condition" name="condition">
+                    <?php foreach (fasilitas_conditions() as $value => $label): ?>
+                        <option value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= $selectedCondition === $value ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="hint">Kondisi fisik fasilitas. Nilainya ikut ditampilkan di halaman publik.</div>
+            </div>
+
+            <div class="field">
                 <?php $isActive = isset($old['is_active']) ? $old['is_active'] : ($facility['is_active'] ?? 1); ?>
                 <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
                     <input type="checkbox" name="is_active" value="1" <?= (int) $isActive === 1 ? 'checked' : '' ?>>

@@ -4,6 +4,7 @@ $facilitiesList = $data['facilities'] ?? $data['fasilitas'] ?? [];
 $totalFac = count($facilitiesList);
 $activeFac = count(array_filter($facilitiesList, fn($f) => (int) ($f['is_active'] ?? 0) === 1));
 $inactiveFac = $totalFac - $activeFac;
+$needRepairFac = (int) ($data['need_repair'] ?? 0);
 ?>
 
 <div class="breadcrumb">
@@ -71,12 +72,12 @@ $inactiveFac = $totalFac - $activeFac;
     </div>
     <div class="card stat">
         <div class="stat-icon blue">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
         </div>
         <div>
-            <small>Status Publikasi</small>
-            <strong>100%</strong>
-            <div class="hint">Terintegrasi otomatis</div>
+            <small>Perlu Perbaikan</small>
+            <strong><?= $needRepairFac ?></strong>
+            <div class="hint">Rusak ringan / rusak berat</div>
         </div>
     </div>
 </div>
@@ -156,6 +157,15 @@ $inactiveFac = $totalFac - $activeFac;
                     <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">
                         <?= htmlspecialchars($fac['category'] ?? $fac['icon'] ?? 'Gedung / Sarpras', ENT_QUOTES, 'UTF-8') ?>
                     </div>
+                    <?php
+                    $facCondition = $fac['condition'] ?? $fac['kondisi'] ?? 'baik';
+                    $conditionStyle = fasilitas_condition_style($facCondition);
+                    ?>
+                    <div style="margin:0 0 8px">
+                        <span class="pill plain" style="color:<?= $conditionStyle['color'] ?>;background:<?= $conditionStyle['bg'] ?>;border:1px solid <?= $conditionStyle['border'] ?>;font-size:10.5px">
+                            Kondisi: <?= htmlspecialchars(fasilitas_condition_label($facCondition), ENT_QUOTES, 'UTF-8') ?>
+                        </span>
+                    </div>
                     <h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.35">
                         <?= htmlspecialchars($fac['name'], ENT_QUOTES, 'UTF-8') ?>
                     </h3>
@@ -196,6 +206,7 @@ $inactiveFac = $totalFac - $activeFac;
                     <th>Kategori / Ikon</th>
                     <th>Deskripsi</th>
                     <th style="width:80px">Urutan</th>
+                    <th style="width:120px">Kondisi</th>
                     <th style="width:90px">Status</th>
                     <th style="width:90px">Aksi</th>
                 </tr>
@@ -203,7 +214,7 @@ $inactiveFac = $totalFac - $activeFac;
             <tbody>
             <?php if (empty($facilitiesList)): ?>
                 <tr>
-                    <td colspan="7" style="padding:36px 16px;text-align:center;color:#6B7280">
+                    <td colspan="8" style="padding:36px 16px;text-align:center;color:#6B7280">
                         <b>Belum ada data fasilitas.</b>
                     </td>
                 </tr>
@@ -229,6 +240,15 @@ $inactiveFac = $totalFac - $activeFac;
                             <?= htmlspecialchars($fac['description'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                         </td>
                         <td><b>#<?= (int) $fac['sort_order'] ?></b></td>
+                        <td>
+                            <?php
+                            $facCondition = $fac['condition'] ?? $fac['kondisi'] ?? 'baik';
+                            $conditionStyle = fasilitas_condition_style($facCondition);
+                            ?>
+                            <span class="pill plain" style="color:<?= $conditionStyle['color'] ?>;background:<?= $conditionStyle['bg'] ?>;border:1px solid <?= $conditionStyle['border'] ?>">
+                                <?= htmlspecialchars(fasilitas_condition_label($facCondition), ENT_QUOTES, 'UTF-8') ?>
+                            </span>
+                        </td>
                         <td>
                             <?php if ((int) $fac['is_active'] === 1): ?>
                                 <span class="pill green">Aktif</span>

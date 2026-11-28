@@ -215,7 +215,7 @@ $facilities = $data['facilities'] ?? [];
                                     </div>
                                 <?php endif; ?>
                                 <span class="fac-v2-tag">
-                                    <?= htmlspecialchars($fac['icon'] ?? 'Fasilitas') ?>
+                                    <?= htmlspecialchars($fac['category'] ?? $fac['icon'] ?? 'Fasilitas') ?>
                                 </span>
                             </div>
                             <div class="fac-v2-body">
@@ -225,6 +225,13 @@ $facilities = $data['facilities'] ?? [];
                                 <p class="fac-v2-desc">
                                     <?= htmlspecialchars($fac['description'] ?? 'Sarana penunjang kegiatan santri.') ?>
                                 </p>
+                                <?php
+                                $facCondition = $fac['condition'] ?? $fac['kondisi'] ?? 'baik';
+                                $conditionStyle = fasilitas_condition_style($facCondition);
+                                ?>
+                                <span style="display:inline-block;margin-top:10px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:<?= $conditionStyle['color'] ?>;background:<?= $conditionStyle['bg'] ?>;border:1px solid <?= $conditionStyle['border'] ?>">
+                                    Kondisi: <?= htmlspecialchars(fasilitas_condition_label($facCondition), ENT_QUOTES, 'UTF-8') ?>
+                                </span>
                             </div>
                         </div>
                     <?php endforeach; ?>

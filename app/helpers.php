@@ -176,3 +176,48 @@ if (!function_exists('format_bytes')) {
         return round($value, $power > 1 ? 1 : 0) . ' ' . $units[$power];
     }
 }
+
+if (!function_exists('fasilitas_conditions')) {
+    /**
+     * Daftar kondisi fasilitas yang sah (sama dengan ENUM di tabel `fasilitas`).
+     * Kuncinya dipakai sebagai nilai tersimpan, nilainya sebagai label UI.
+     */
+    function fasilitas_conditions(): array
+    {
+        return [
+            'sangat_baik'  => 'Sangat Baik',
+            'baik'         => 'Baik',
+            'rusak_ringan' => 'Rusak Ringan',
+            'rusak_berat'  => 'Rusak Berat',
+        ];
+    }
+}
+
+if (!function_exists('fasilitas_condition_label')) {
+    function fasilitas_condition_label(?string $condition): string
+    {
+        $conditions = fasilitas_conditions();
+        $condition = (string) $condition;
+
+        return $conditions[$condition] ?? 'Baik';
+    }
+}
+
+if (!function_exists('fasilitas_condition_style')) {
+    /**
+     * Warna badge kondisi: hijau (layak), biru (baik), kuning, merah.
+     */
+    function fasilitas_condition_style(?string $condition): array
+    {
+        switch ((string) $condition) {
+            case 'sangat_baik':
+                return ['color' => '#15803D', 'bg' => '#DCFCE7', 'border' => '#BBF7D0'];
+            case 'rusak_ringan':
+                return ['color' => '#B45309', 'bg' => '#FEF3C7', 'border' => '#FDE68A'];
+            case 'rusak_berat':
+                return ['color' => '#B91C1C', 'bg' => '#FEE2E2', 'border' => '#FECACA'];
+            default:
+                return ['color' => '#2563EB', 'bg' => '#DBEAFE', 'border' => '#BFDBFE'];
+        }
+    }
+}

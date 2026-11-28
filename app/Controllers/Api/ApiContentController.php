@@ -281,7 +281,7 @@ class ApiContentController
         )->fetchColumn();
 
         $stmt = $pdo->query(
-            "SELECT id, name, nama_fasilitas, description, deskripsi, image_path, gambar, category, sort_order
+            "SELECT id, name, nama_fasilitas, description, deskripsi, image_path, gambar, category, `condition`, kondisi, sort_order
              FROM fasilitas
              WHERE is_active = 1 AND deleted_at IS NULL
              ORDER BY sort_order ASC, id ASC
@@ -297,6 +297,8 @@ class ApiContentController
                 'image_url'   => ApiFormat::mediaUrl($row['gambar'] ?? $row['image_path']),
                 // `icon` tidak ada di skema produksi; kategori dipakai sebagai penggantinya.
                 'icon'        => $row['category'],
+                'condition'       => $row['condition'] ?? $row['kondisi'] ?? 'baik',
+                'condition_label' => fasilitas_condition_label($row['condition'] ?? $row['kondisi'] ?? 'baik'),
             ];
         }
 

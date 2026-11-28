@@ -74,6 +74,14 @@ class AdminFasilitasController
         $stmt->execute($params);
         $facilities = $stmt->fetchAll();
 
+        $needRepairFac = 0;
+        foreach ($facilities as $fac) {
+            $condition = $fac['condition'] ?? $fac['kondisi'] ?? 'baik';
+            if ($condition === 'rusak_ringan' || $condition === 'rusak_berat') {
+                $needRepairFac++;
+            }
+        }
+
         $data = [
             'title' => 'Kelola Fasilitas | Panel Admin MTs Al-Huda',
             'user' => $user,
@@ -81,6 +89,7 @@ class AdminFasilitasController
             'active_menu' => 'fasilitas',
             'facilities' => $facilities,
             'fasilitas' => $facilities,
+            'need_repair' => $needRepairFac,
             'q' => $q,
             'flash' => $_SESSION['_flash_success'] ?? null,
             'error' => $_SESSION['_flash_error'] ?? null,
@@ -125,6 +134,10 @@ class AdminFasilitasController
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
         $isActive = isset($_POST['is_active']) ? 1 : 0;
         $imagePath = trim((string) ($_POST['image_path'] ?? ''));
+        $condition = trim((string) ($_POST['condition'] ?? 'baik'));
+        if (!array_key_exists($condition, fasilitas_conditions())) {
+            $condition = 'baik';
+        }
 
         if ($name === '') {
             $_SESSION['_flash_error'] = 'Nama fasilitas wajib diisi.';
@@ -152,7 +165,9 @@ class AdminFasilitasController
         $category = $icon !== '' ? $icon : 'Sarana Pembelajaran';
         $slug = $this->slugFor($name);
 
-        $stmt = $pdo->prepare("INSERT INTO fasilitas (name, nama_fasilitas, slug, category, description, deskripsi, image_path, gambar, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        // `condition` adalah kata kunci MySQL, jadi selalu pakai backtick.
+        // Kolom kembar `kondisi` ikut diisi agar konsisten dengan skema produksi.
+        $stmt = $pdo->prepare("INSERT INTO fasilitas (name, nama_fasilitas, slug, category, description, deskripsi, image_path, gambar, `condition`, kondisi, quantity, jumlah, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, NOW(), NOW())");
         $stmt->execute([
             $name,
             $name,
@@ -162,6 +177,8 @@ class AdminFasilitasController
             $description !== '' ? $description : null,
             $imagePath !== '' ? $imagePath : null,
             $imagePath !== '' ? $imagePath : null,
+            $condition,
+            $condition,
             $sortOrder,
             $isActive,
         ]);
@@ -229,6 +246,10 @@ class AdminFasilitasController
         $sortOrder = (int) ($_POST['sort_order'] ?? 0);
         $isActive = isset($_POST['is_active']) ? 1 : 0;
         $imagePath = trim((string) ($_POST['image_path'] ?? ($facility['image_path'] ?? '')));
+        $condition = trim((string) ($_POST['condition'] ?? ($facility['condition'] ?? $facility['kondisi'] ?? 'baik')));
+        if (!array_key_exists($condition, fasilitas_conditions())) {
+            $condition = 'baik';
+        }
 
         if ($name === '') {
             $_SESSION['_flash_error'] = 'Nama fasilitas wajib diisi.';
@@ -253,7 +274,7 @@ class AdminFasilitasController
         $category = $icon !== '' ? $icon : 'Sarana Pembelajaran';
         $slug = $this->slugFor($name, $id);
 
-        $updateStmt = $pdo->prepare("UPDATE fasilitas SET name = ?, nama_fasilitas = ?, slug = ?, category = ?, description = ?, deskripsi = ?, image_path = ?, gambar = ?, sort_order = ?, is_active = ?, updated_at = NOW() WHERE id = ?");
+        $updateStmt = $pdo->prepare("UPDATE fasilitas SET name = ?, nama_fasilitas = ?, slug = ?, category = ?, description = ?, deskripsi = ?, image_path = ?, gambar = ?, `condition` = ?, kondisi = ?, sort_order = ?, is_active = ?, updated_at = NOW() WHERE id = ?");
         $updateStmt->execute([
             $name,
             $name,
@@ -263,6 +284,8 @@ class AdminFasilitasController
             $description !== '' ? $description : null,
             $imagePath !== '' ? $imagePath : null,
             $imagePath !== '' ? $imagePath : null,
+            $condition,
+            $condition,
             $sortOrder,
             $isActive,
             $id,

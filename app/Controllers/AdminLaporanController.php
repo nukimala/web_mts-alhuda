@@ -177,7 +177,7 @@ class AdminLaporanController
         $beritaTayang    = $q("SELECT COUNT(*) FROM berita WHERE status = 'published'");
         $beritaDraft     = $q("SELECT COUNT(*) FROM berita WHERE status = 'draft'");
         $totalGaleri     = $q("SELECT COUNT(*) FROM galeri");
-        $totalFasilitas  = $q("SELECT COUNT(*) FROM fasilitas");
+        $totalFasilitas  = $q("SELECT COUNT(*) FROM fasilitas WHERE deleted_at IS NULL");
 
         // Layanan
         $ppdbAktif       = $q("SELECT COUNT(*) FROM dokumen_ppdb WHERE is_active = 1");

@@ -3,6 +3,8 @@ require_once __DIR__ . '/../layouts/header.php';
 require_once __DIR__ . '/../layouts/navbar.php';
 
 $facilities = $data['facilities'] ?? [];
+$persentaseLayak = (int) ($data['persentase_layak'] ?? 0);
+$totalFasilitas = (int) ($data['total_fasilitas'] ?? count($facilities));
 ?>
 
 <main>
@@ -32,7 +34,11 @@ $facilities = $data['facilities'] ?? [];
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <span style="background: #DCFCE7; color: #15803D; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">
-                        ✓ 100% Layak Pakai
+                        <?php if ($totalFasilitas > 0): ?>
+                            ✓ <?= $persentaseLayak ?>% Layak Pakai
+                        <?php else: ?>
+                            ✓ Belum ada data fasilitas
+                        <?php endif; ?>
                     </span>
                     <span style="background: #EFF6FF; color: #1D4ED8; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">
                         ★ Terakreditasi A
@@ -72,8 +78,14 @@ $facilities = $data['facilities'] ?? [];
                                 </p>
                             </div>
 
-                            <div style="padding: 12px 22px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 12px; color: #15803D; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
-                                <span>Status: Siap Digunakan</span>
+                            <?php
+                            $facCondition = $fac['condition'] ?? $fac['kondisi'] ?? 'baik';
+                            $conditionStyle = fasilitas_condition_style($facCondition);
+                            ?>
+                            <div style="padding: 12px 22px; background: #F8FAFC; border-top: 1px solid #E2E8F0; font-size: 12px; color: #15803D; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                                <span style="color: <?= $conditionStyle['color'] ?>">
+                                    Kondisi: <?= htmlspecialchars(fasilitas_condition_label($facCondition), ENT_QUOTES, 'UTF-8') ?>
+                                </span>
                                 <span>Prioritas #<?= (int) ($fac['sort_order'] ?? 1) ?></span>
                             </div>
                         </div>

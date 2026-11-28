@@ -26,7 +26,7 @@ class HomeController
         $latestPosts = $beritaStmt->fetchAll();
 
         // 2. Fasilitas unggulan
-        $facStmt = $pdo->query("SELECT * FROM fasilitas WHERE is_active = 1 ORDER BY sort_order ASC LIMIT 4");
+        $facStmt = $pdo->query("SELECT * FROM fasilitas WHERE is_active = 1 AND deleted_at IS NULL ORDER BY sort_order ASC LIMIT 4");
         $facilities = $facStmt->fetchAll();
 
         // 3. Pengaturan madrasah via Model
